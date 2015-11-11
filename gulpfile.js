@@ -23,7 +23,7 @@ gulp.task('coffee', function() {
             .on('error', gUtil.log))
         .pipe(gulp.dest('builds/dev/components/scripts'))
 });
-
+// adding the extra array of tasks is adding dependencies that get run before the parent task.
 gulp.task('js', function() {
     gulp.src(jsSources)
         .pipe(concat('scripts.js'))
@@ -36,9 +36,12 @@ gulp.task('compass', function() {
         .pipe(compass({
             sass : 'builds/dev/components/sass',
             image : 'builds/dev/images',
-            style : 'expanded'
+            style : 'expanded',
+            comments : true
         }))
         .pipe(gulp.dest('builds/dev/css')
             .on('error', gUtil.log))
 
-})
+});
+
+gulp.task('default', ['coffee', 'js', 'compass']);
