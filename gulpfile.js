@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     concat = require('gulp-concat'),
     browserify = require('gulp-browserify'),
-    compass = require('gulp-compass');
+    compass = require('gulp-compass'),
+    connect = require('gulp-connect');
 
 var coffeeSources = ['builds/dev/components/coffee/tagline.coffee'];
 
@@ -29,6 +30,7 @@ gulp.task('js', function() {
         .pipe(concat('scripts.js'))
         .pipe(browserify())
         .pipe(gulp.dest('builds/dev/js'))
+        .pipe(connect.reload())
 });
 
 gulp.task('compass', function() {
@@ -41,10 +43,17 @@ gulp.task('compass', function() {
         }))
         .pipe(gulp.dest('builds/dev/css')
             .on('error', gUtil.log))
-
+        .pipe(connect.reload())
 });
 
-gulp.task('default', ['coffee', 'js', 'compass', 'watch']);
+gulp.task('connect', function() {
+    connect.server({
+        root : 'builds/dev/',
+        livereload : true
+    });
+})
+
+gulp.task('default', ['coffee', 'js', 'compass', 'connect', 'watch']);
 
 gulp.task('watch', function() {
     gulp.watch(coffeeSources, ['coffee']);
